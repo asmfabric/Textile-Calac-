@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.asmfabric.twa",
+        "sha256_cert_fingerprints": ["77:14:42:37:5C:A8:9C:CE:C0:5E:90:64:D0:62:7C:EF:98:18:D9:DF:54:71:81:77:DF:0F:B8:09:0D:6D:62:BF"]
+      }
+    }]
