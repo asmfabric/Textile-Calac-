@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "io.github.asmfabric.twa",
-        "sha256_cert_fingerprints": ["77:14:42:37:5C:A8:9C:CE:C0:5E:90:64:D0:62:7C:EF:98:18:D9:DF:54:71:81:77:DF:0F:B8:09:0D:6D:62:BF"]
+        "sha256_cert_fingerprints": ["F4:B3:82:D7:D0:FC:33:29:8A:64:C3:CF:15:17:F8:E9:F4:E9:19:7C:DF:63:BE:31:AE:5A:12:1A:71:18:BC:1C"]
       }
     }]
