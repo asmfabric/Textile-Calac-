@@ -120,7 +120,7 @@
         // Service Worker for Live Update & Offline
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then(reg => console.log('SW Registered')).catch(err => console.log('SW Failed'));
+                navigator.serviceWorker.register('./sw.js');
             });
         }
 
@@ -136,7 +136,7 @@
             e.setAttribute('data-theme',t);localStorage.setItem('textile-theme',t)
         }
 
-        // Persistent Data Logic
+        // --- Data Persistence (LocalStorage) ---
         function saveToLocal() {
             const data = {
                 kg: document.getElementById('kg').value,
@@ -145,15 +145,22 @@
                 yd_v: document.getElementById('yd_v').value,
                 yd_k: document.getElementById('yd_k').value,
                 p_y: document.getElementById('p_y').value,
-                p_k: document.getElementById('p_k').value
+                p_k: document.getElementById('p_k').value,
+                unit_state: u
             };
-            localStorage.setItem('textile_saved_calc', JSON.stringify(data));
+            localStorage.setItem('textile_live_data', JSON.stringify(data));
         }
 
         function loadFromLocal() {
-            const saved = localStorage.getItem('textile_saved_calc');
+            const saved = localStorage.getItem('textile_live_data');
             if (saved) {
                 const d = JSON.parse(saved);
+                u = d.unit_state !== undefined ? d.unit_state : true;
+                
+                // Set correct labels for unit
+                const e=document.getElementById('u-mm'), n=document.getElementById('u-en'), i=document.getElementById('unit-u');
+                if(!u){ e.innerText="အလိပ် မီတာ"; n.innerText="Roll Meters"; i.innerHTML="M<br>မီတာ"; }
+
                 document.getElementById('kg').value = d.kg || '';
                 document.getElementById('u-val').value = d.u_val || '';
                 document.getElementById('width').value = d.width || '';
@@ -162,10 +169,9 @@
                 document.getElementById('p_y').value = d.p_y || '';
                 document.getElementById('p_k').value = d.p_k || '';
                 
-                // Show units if data exists
-                inputs.forEach(e => {
-                    const tag = e.parentElement.querySelector('.unit-tag');
-                    if(tag && e.value) tag.classList.add('show-unit');
+                inputs.forEach(el => {
+                    const tag = el.parentElement.querySelector('.unit-tag');
+                    if(tag && el.value) tag.classList.add('show-unit');
                 });
                 runCalc('kg');
             }
@@ -230,7 +236,7 @@
         }
 
         function resetAll(){
-            localStorage.removeItem('textile_saved_calc');
+            localStorage.removeItem('textile_live_data');
             inputs.forEach(e=>{if(e.value&&e.id!=='yd_v')e.classList.add('fade-out')});
             setTimeout(()=>{
                 inputs.forEach(e=>{e.id==='yd_v'?e.value=1:e.value='';e.readOnly=!1;e.classList.remove('fade-out')});
@@ -241,7 +247,6 @@
             },400)
         }
 
-        // Calculator Logic
         const scr=document.getElementById('cs'),hist=document.getElementById('calc-history');
         let cV='0',pV='',cO=null,wN=!1;
         function nm(e){if(wN){cV=e;wN=!1}else cV=cV==='0'?e:cV+e;scr.innerText=cV.substring(0,12)}
@@ -261,4 +266,3 @@
     </script>
 </body>
 </html>
-
