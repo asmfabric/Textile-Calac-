@@ -11,16 +11,25 @@
 <style>
 :root,[data-theme="dark"]{--bg:#000;--text-bright:#fff;--warn:#ff3b30;--unit-color:rgba(255,255,255,0.5);--market-color:#00ff88}[data-theme="light"]{--bg:#fff;--text-bright:#000;--unit-color:rgba(0,0,0,0.4);--market-color:#008f4c}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}input{-webkit-user-select:text;user-select:text}html{background-color:var(--bg);transition:background-color .3s}
 
-body{background-color:var(--bg);color:var(--text-bright);font-family:'SF Pro Display',-apple-system,sans-serif;margin:0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-
-/* --- Fixed Ad Spaces --- */
-.top-ad-space, .bottom-ad-space {
-  height: 60px; width: 100%; background: #111;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: #444; flex-shrink: 0; z-index: 20000;
+body{
+  background-color:var(--bg);
+  color:var(--text-bright);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden
 }
-.bottom-ad-space { border-top: 0.5px solid #222; }
-.top-ad-space { border-bottom: 0.5px solid #222; }
+
+/* --- Fixed Ad Spaces (Appilix Ready) --- */
+.top-ad-space, .bottom-ad-space {
+  height: 60px; width: 100%; background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; z-index: 100;
+}
+.bottom-ad-space { border-top: 0.5px solid rgba(255,255,255,0.1); }
+.top-ad-space { border-bottom: 0.5px solid rgba(255,255,255,0.1); }
 
 /* Splash */
 #splash-screen{position:fixed;top:0;left:0;width:100%;height:100%;background-color:var(--bg);display:flex;justify-content:center;align-items:center;z-index:30000;transition:opacity .8s,visibility .8s}#splash-text{font-size:1.5rem;font-weight:900;letter-spacing:4px;opacity:0;animation:f 2.2s forwards}@keyframes f{0%{opacity:0;transform:translateY(10px)}30%,70%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}.hide-splash{opacity:0;visibility:hidden;pointer-events:none}
@@ -31,21 +40,17 @@ body{background-color:var(--bg);color:var(--text-bright);font-family:'SF Pro Dis
 .header-results{padding:10px 25px}
 .total-box{margin-bottom:10px}.total-label{font-size:.7rem;font-weight:600;opacity:.8;display:block}.total-val{font-size:3.2rem;font-weight:900;line-height:1;transition:opacity .4s}.sub-res-row{display:flex;justify-content:space-between;margin-top:10px}.res-item{flex:1}.res-label{font-size:.7rem;font-weight:600;opacity:.8;display:block}.res-val{font-size:1.4rem;font-weight:800;transition:opacity .4s}#gsm-sign{font-size:.75rem;font-weight:600;margin-left:8px;opacity:.7}
 
-/* --- 🔥 Universal 3D Press Effect 🔥 --- */
-.theme-btn, .calc-trigger, .vpn-master-btn, .reset-btn, .calc-b, .row, .close-ad, .market-i { 
+.theme-btn, .calc-trigger, .reset-btn, .calc-b, .row, .market-i { 
   transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   cursor: pointer;
 }
-/* ဘယ်ဟာနှိပ်နှိပ် ချိုင့်ဝင်သွားစေမယ့် အပိုင်း */
-.theme-btn:active, .calc-trigger:active, .vpn-master-btn:active, .reset-btn:active, .calc-b:active, .row:active, .close-ad:active, .market-i:active { 
+.theme-btn:active, .calc-trigger:active, .reset-btn:active, .calc-b:active, .row:active, .market-i:active { 
   transform: scale(0.94);
   opacity: 0.8;
 }
 
 .header-actions{position:fixed;top:75px;right:25px;display:flex;flex-direction:column;gap:12px;z-index:18000;align-items:flex-end}
-.theme-btn, .calc-trigger, .vpn-master-btn { background: 0 0; border: none; color: var(--text-bright); font-size: .75rem; font-weight: 700; }
-.vpn-master-btn { opacity: .4; }
-.vpn-on { opacity: 1 !important; color: var(--market-color) !important; text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+.theme-btn, .calc-trigger { background: 0 0; border: none; color: var(--text-bright); font-size: .75rem; font-weight: 700; }
 
 /* Main Content */
 .main-content{padding:0 25px;flex:1;overflow-y:auto;padding-top:15px}
@@ -66,21 +71,19 @@ input{background:0 0;border:none;color:var(--text-bright);font-size:1.7rem;font-
 .calc-b{height:75px;font-size:2rem;display:flex;align-items:center;justify-content:center; background:transparent; border:none; color:inherit;}
 .calc-op{color:#ff9f0a;font-weight:600;font-size:2.2rem}.calc-func{color:#a5a5a5;font-size:1.5rem}
 
-#ad-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:40000; display:none; flex-direction:column; align-items:center; justify-content:center; }
-.close-ad { margin-top:30px; padding:10px 30px; background:#fff; color:#000; border:none; border-radius:20px; font-weight:bold; }
+.fade-out { opacity: 0; transition: opacity 0.4s; }
 </style>
 
 </head>
-<body onload="fetchLiveUpdate()">
+<body>
 
-<div class="top-ad-space">ADVERTISEMENT (TOP)</div>
+<div class="top-ad-space" id="top-ad"></div>
 
 <div id="splash-screen"><div id="splash-text">TEXTILE CALC</div></div>
 
 <div class="header-actions">
   <button class="theme-btn" onclick="toggleTheme()">THEME</button>
   <button class="calc-trigger" id="calc-master-btn" onclick="toggleCalc()">CALCULATOR</button>
-  <button class="vpn-master-btn" id="vpn-master-btn" onclick="toggleVPN()">VPN</button>
 </div>
 
 <div class="app-header">
@@ -125,8 +128,8 @@ input{background:0 0;border:none;color:var(--text-bright);font-size:1.7rem;font-
   </div>
   <div class="row">
     <div class="label-group">
-      <input type="number" id="yd_v" value="1" style="width:30px;font-size:1.1rem;text-align:left;float:left;margin-right:8px;font-weight:800;color:var(--text-bright);background:0;border:0">
-      <span class="label-mm">ကိုက်ကီလို (Ratio)</span><span class="label-en">Yards per KG</span>
+      <input type="number" id="yd_v" value="1" style="width:30px;font-size:1.1rem;text-align:left;float:left;margin-right:8px;font-weight:800;color:var(--text-bright);background:0;border:0;margin-top:2px">
+      <span class="label-mm">ကိုက်ကီလို</span><span class="label-en">Yards per KG</span>
     </div>
     <div class="input-group"><input type="number" id="yd_k" placeholder="0.00"><span class="unit-tag" id="unit-ratio">KG<br>ကီလို</span></div>
   </div>
@@ -141,13 +144,7 @@ input{background:0 0;border:none;color:var(--text-bright);font-size:1.7rem;font-
   <div style="height:30px"></div>
 </div>
 
-<div class="bottom-ad-space">ADVERTISEMENT (BOTTOM)</div>
-
-<div id="ad-overlay">
-  <div style="color:#fff; font-weight: bold; margin-bottom: 10px;">PROMOTIONAL AD</div>
-  <div style="width:280px; height:400px; background:#222; border-radius:10px;"></div>
-  <button class="close-ad" onclick="closeAd()">ကြော်ငြာပိတ်မည်</button>
-</div>
+<div class="bottom-ad-space" id="bottom-ad"></div>
 
 <div id="calc-overlay">
   <div class="calc-screen"><div id="calc-history"></div><div id="cs">0</div></div>
@@ -161,51 +158,11 @@ input{background:0 0;border:none;color:var(--text-bright);font-size:1.7rem;font-
 </div>
 
 <script>
-let vpnActive = false;
-let vpnConfig = { vpn_status: "off", message: "Updating..." };
-
-// --- 📡 GitHub Live Update System ---
-async function fetchLiveUpdate() {
-  // ⚠️ GitHub Raw URL ကို ဒီနေရာမှာ အစားထိုးလိုက်ပါ
-  const GITHUB_URL = 'https://raw.githubusercontent.com/AdvancedSoftwareMechanics/Textile-Calac-/refs/heads/main/vpn_config.json';
-  try {
-    const res = await fetch(GITHUB_URL);
-    vpnConfig = await res.json();
-    console.log("Live Config Loaded");
-  } catch (e) {
-    console.log("Offline Mode");
-  }
-}
-
-function toggleVPN(){
-  if (navigator.vibrate) navigator.vibrate(50); 
-  if(!vpnActive) document.getElementById('ad-overlay').style.display = 'flex';
-  else {
-    vpnActive = false;
-    document.getElementById('vpn-master-btn').classList.remove('vpn-on');
-    document.getElementById('vpn-master-btn').innerText = "VPN";
-  }
-}
-
-function closeAd(){
-  document.getElementById('ad-overlay').style.display = 'none';
-  // GitHub က ပိတ်ထားရင် ဖွင့်မရအောင် လုပ်ထားခြင်း
-  if(vpnConfig.vpn_status === "off" && vpnConfig.message !== "Updating...") {
-     alert("VPN Server is currently maintenance.");
-     return;
-  }
-  vpnActive = true;
-  document.getElementById('vpn-master-btn').classList.add('vpn-on');
-  document.getElementById('vpn-master-btn').innerText = "VPN ON";
-  if(vpnConfig.message) console.log(vpnConfig.message);
-}
-
-// --- ကျန်ရှိသော Logic များ ---
 setTimeout(()=>document.getElementById('splash-screen').classList.add('hide-splash'),2200);
 let q=!1; function toggleCalc(){ const e=document.getElementById('calc-overlay'),t=document.getElementById('calc-master-btn'); q=!q; e.style.display=q?'flex':'none'; t.innerText=q?"BACK":"CALCULATOR"; t.style.color=q?"var(--warn)":"var(--text-bright)"; if (navigator.vibrate) navigator.vibrate(40); }
 function toggleTheme(){ const e=document.documentElement,t=e.getAttribute('data-theme')==='light'?'dark':'light'; e.setAttribute('data-theme',t); localStorage.setItem('textile-theme',t); if (navigator.vibrate) navigator.vibrate(40); }
 
-let u=!0,f=0,l='',t=0;function holdMarket(e){const n=document.getElementById('u-val');if(e){t=parseFloat(n.value)||0;n.value=((u?t/1.0936:t)*1.1).toFixed(2);n.classList.add('market-active')}else{n.value=t?t.toFixed(2):'';n.classList.remove('market-active')}}function toggleUnit(){clearSecondary();const e=document.getElementById('u-mm'),n=document.getElementById('u-en'),o=document.getElementById('u-val'),i=document.getElementById('unit-u');let s=parseFloat(o.value)||0;if(u){e.innerText="အလိပ် မီတာ";n.innerText="Roll Meters";i.innerHTML="M<br>မီတာ";if(s>0)o.value=(s*.9144).toFixed(2)}else{e.innerText="အလိပ် ကိုက်";n.innerText="Roll Yards";i.innerHTML="YD<br>ကိုက်";if(s>0)o.value=(s/.9144).toFixed(2)}u=!u;runCalc('u-val')}function clearSecondary(){['width','p_y','p_k'].forEach(e=>document.getElementById(e).value='');document.querySelectorAll('.unit-tag').forEach(e=>{if(['unit-width','unit-py','unit-pk'].includes(e.id))e.classList.remove('show-unit')})}const inputs=document.querySelectorAll('.main-content input');inputs.forEach(e=>e.addEventListener('input',t=>{const n=document.getElementById('kg'),o=document.getElementById('u-val');if(t.target.id==='yd_k'&&n.value===''&&o.value===''){l='yd_k';n.readOnly=!0;o.readOnly=!0;document.getElementById('p_y').value='';document.getElementById('p_k').value='';document.querySelectorAll('.unit-tag').forEach(e=>{if(['unit-py','unit-pk'].includes(e.id))e.classList.remove('show-unit')})}if(t.target.id==='yd_v'){updateRatioOnly();return}if(['kg','u-val'].includes(t.target.id))clearSecondary();if(l===''&&t.target.id!=='yd_v')l=t.target.id;const i=t.target.parentElement.querySelector('.unit-tag');if(i)t.target.value.length>0?i.classList.add('show-unit'):i.classList.remove('show-unit');runCalc(t.target.id)}));function updateRatioOnly(){let e=parseFloat(document.getElementById('yd_v').value)||0;if(f>0&&e>0){document.getElementById('yd_k').value=(e/f).toFixed(2);document.getElementById('unit-ratio').classList.add('show-unit')}}function runCalc(e){let n=document.getElementById('kg'),o=document.getElementById('u-val'),i=document.getElementById('yd_k'),s=document.getElementById('yd_v'),a=parseFloat(n.value)||0,r=parseFloat(document.getElementById('width').value)||0,c=parseFloat(o.value)||0,d=parseFloat(s.value)||1,g=parseFloat(i.value)||0,m=parseFloat(document.getElementById('p_y').value)||0,p=parseFloat(document.getElementById('p_k').value)||0;const h=document.getElementById('market-i');if(u&&c>0)h.classList.add('show-i');else h.classList.remove('show-i');let y=u?c:c/.9144;if(e==='yd_k'&&g>0){f=d/g;if(l==='u-val'&&y>0){a=y/f;n.value=a.toFixed(2);document.getElementById('unit-kg').classList.add('show-unit')}else if(l==='kg'&&a>0){let e=f*a;o.value=u?e.toFixed(2):(e*.9144).toFixed(2);document.getElementById('unit-u').classList.add('show-unit')}}else if(a>0&&y>0){f=y/a;i.value=(d/f).toFixed(2);document.getElementById('unit-ratio').classList.add('show-unit')}if(f>0){if(e==='p_y'){p=m*f;document.getElementById('p_k').value=Math.round(p);document.getElementById('unit-pk').classList.add('show-unit')}else if(e==='p_k'){m=p/f;document.getElementById('p_y').value=Math.round(m);document.getElementById('unit-py').classList.add('show-unit')}}let v=f>0&&r>0?1000*1.0936/(f*r*.0254):0;document.getElementById('yield-res').innerText=f>0?f.toFixed(2):"0.00";document.getElementById('total-res').innerText=a>0&&p>0?Math.round(a*p).toLocaleString():"0";document.getElementById('gsm-res').innerText=v>0?Math.round(v):"0";const x=document.getElementById('gsm-sign');if(v>0){let e=Math.round(v);x.innerText=e<110?"- အလွန်ပါး":e<160?"- ပါး":e<220?"- အလတ်":e<300?"- ထူ":"- အလွန်ထူ"}else x.innerText=""}function resetAll(){if (navigator.vibrate) navigator.vibrate(100); const e=[document.getElementById('yield-res'),document.getElementById('gsm-res'),document.getElementById('total-res'),document.getElementById('gsm-sign')];inputs.forEach(e=>{if(e.value&&e.id!=='yd_v')e.classList.add('fade-out')});e.forEach(e=>e.classList.add('fade-out'));setTimeout(()=>{inputs.forEach(e=>{e.id==='yd_v'?e.value=1:e.value='';e.readOnly=!1;e.classList.remove('fade-out')});document.querySelectorAll('.unit-tag').forEach(e=>e.classList.remove('show-unit'));document.getElementById('market-i').classList.remove('show-i');l='';f=0;document.getElementById('yield-res').innerText="0.00";document.getElementById('gsm-res').innerText="0";document.getElementById('gsm-sign').innerText="";document.getElementById('total-res').innerText="0";e.forEach(e=>e.classList.remove('fade-out'))},400)}
+let u=!0,f=0,l='',t=0;function holdMarket(e){const n=document.getElementById('u-val');if(e){t=parseFloat(n.value)||0;n.value=((u?t/1.0936:t)*1.1).toFixed(2);n.classList.add('market-active')}else{n.value=t?t.toFixed(2):'';n.classList.remove('market-active')}}function toggleUnit(){clearSecondary();const e=document.getElementById('u-mm'),n=document.getElementById('u-en'),o=document.getElementById('u-val'),i=document.getElementById('unit-u');let s=parseFloat(o.value)||0;if(u){e.innerText="အလိပ် မီတာ";n.innerText="Roll Meters";i.innerHTML="M<br>မီတာ";if(s>0)o.value=(s*.9144).toFixed(2)}else{e.innerText="အလိပ် ကိုက်";n.innerText="Roll Yards";i.innerHTML="YD<br>ကိုက်";if(s>0)o.value=(s/.9144).toFixed(2)}u=!u;runCalc('u-val')}function clearSecondary(){['width','p_y','p_k'].forEach(e=>document.getElementById(e).value='');document.querySelectorAll('.unit-tag').forEach(e=>{if(['unit-width','unit-py','unit-pk'].includes(e.id))e.classList.remove('show-unit')})}const inputs=document.querySelectorAll('.main-content input');inputs.forEach(e=>e.addEventListener('input',t=>{const n=document.getElementById('kg'),o=document.getElementById('u-val');if(t.target.id==='yd_k'&&n.value===''&&o.value===''){l='yd_k';n.readOnly=!0;o.readOnly=!0;document.getElementById('p_y').value='';document.getElementById('p_k').value='';document.querySelectorAll('.unit-tag').forEach(e=>{if(['unit-py','unit-pk'].includes(e.id))e.classList.remove('show-unit')})}if(t.target.id==='yd_v'){updateRatioOnly();return}if(['kg','u-val'].includes(t.target.id))clearSecondary();if(l===''&&t.target.id!=='yd_v')l=t.target.id;const i=t.target.parentElement.querySelector('.unit-tag');if(i)t.target.value.length>0?i.classList.add('show-unit'):i.classList.remove('show-unit');runCalc(t.target.id)}));function updateRatioOnly(){let e=parseFloat(document.getElementById('yd_v').value)||0;if(f>0&&e>0){document.getElementById('yd_k').value=(e/f).toFixed(2);document.getElementById('unit-ratio').classList.add('show-unit')}}function runCalc(e){let n=document.getElementById('kg'),o=document.getElementById('u-val'),i=document.getElementById('yd_k'),s=document.getElementById('yd_v'),a=parseFloat(n.value)||0,r=parseFloat(document.getElementById('width').value)||0,c=parseFloat(o.value)||0,d=parseFloat(s.value)||1,g=parseFloat(i.value)||0,m=parseFloat(document.getElementById('p_y').value)||0,p=parseFloat(document.getElementById('p_k').value)||0;const h=document.getElementById('market-i');if(u&&c>0)h.classList.add('show-i');else h.classList.remove('show-i');let y=u?c:c/.9144;if(e==='yd_k'&&g>0){f=d/g;if(l==='u-val'&&y>0){a=y/f;n.value=a.toFixed(2);document.getElementById('unit-kg').classList.add('show-unit')}else if(l==='kg'&&a>0){let e=f*a;o.value=u?e.toFixed(2):(e*.9144).toFixed(2);document.getElementById('unit-u').classList.add('show-unit')}}else if(a>0&&y>0){f=y/a;i.value=(d/f).toFixed(2);document.getElementById('unit-ratio').classList.add('show-unit')}if(f>0){if(e==='p_y'){p=m*f;document.getElementById('p_k').value=Math.round(p);document.getElementById('unit-pk').classList.add('show-unit')}else if(e==='p_k'){m=p/f;document.getElementById('p_y').value=Math.round(m);document.getElementById('unit-py').classList.add('show-unit')}}let v=f>0&&r>0?1000*1.0936/(f*r*.0254):0;document.getElementById('yield-res').innerText=f>0?f.toFixed(2):"0.00";document.getElementById('total-res').innerText=a>0&&p>0?Math.round(a*p).toLocaleString():"0";document.getElementById('gsm-res').innerText=v>0?Math.round(v):"0";const x=document.getElementById('gsm-sign');if(v>0){let e=Math.round(v);x.innerText=e<110?"- အလွန်ပါး":e<160?"- ပါး":e<220?"- အလတ်":e<300?"- ထူ":"- အလွန်ထူ"}else x.innerText=""}function resetAll(){if (navigator.vibrate) navigator.vibrate(100); const e=[document.getElementById('yield-res'),document.getElementById('gsm-res'),document.getElementById('total-res'),document.getElementById('gsm-sign')];inputs.forEach(el=>{if(el.value&&el.id!=='yd_v')el.classList.add('fade-out')});e.forEach(el=>el.classList.add('fade-out'));setTimeout(()=>{inputs.forEach(el=>{el.id==='yd_v'?el.value=1:el.value='';el.readOnly=!1;el.classList.remove('fade-out')});document.querySelectorAll('.unit-tag').forEach(el=>el.classList.remove('show-unit'));document.getElementById('market-i').classList.remove('show-i');l='';f=0;document.getElementById('yield-res').innerText="0.00";document.getElementById('gsm-res').innerText="0";document.getElementById('gsm-sign').innerText="";document.getElementById('total-res').innerText="0";e.forEach(el=>el.classList.remove('fade-out'))},400)}
 
 /* --- Calculator Logic --- */
 const scr=document.getElementById('cs'),hist=document.getElementById('calc-history');let cV='0',pV='',cO=null,wN=!1;
