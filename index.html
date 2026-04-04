@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="my" data-theme="dark"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Textile Calc</title>
+<title>Textile Calc Pro</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#000000">
 
@@ -13,220 +13,310 @@
 </script>
 
 <style>
-:root,[data-theme="dark"]{--bg:#000;--text-bright:#fff;--warn:#ff3b30;--unit-color:rgba(255,255,255,0.5);--market-color:#00ff88}[data-theme="light"]{--bg:#fff;--text-bright:#000;--unit-color:rgba(0,0,0,0.4);--market-color:#008f4c}
+:root,[data-theme="dark"]{--bg:#000;--text-bright:#fff;--warn:#ff3b30;--unit-color:rgba(255,255,255,0.5);--market-color:#00ff88;--panel-bg:#000}[data-theme="light"]{--bg:#fff;--text-bright:#000;--unit-color:rgba(0,0,0,0.4);--market-color:#008f4c;--panel-bg:#fff}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 input{-webkit-user-select:text;user-select:text}
 html{background-color:var(--bg);transition:background-color .3s}
 body{background-color:var(--bg);color:var(--text-bright);font-family:'Inter','Noto Sans Myanmar',-apple-system,sans-serif;margin:0;height:100vh;display:flex;flex-direction:column;overflow:hidden;-webkit-font-smoothing:antialiased}
 
-#splash-screen{position:fixed;top:0;left:0;width:100%;height:100%;background-color:var(--bg);display:flex;justify-content:center;align-items:center;z-index:20000;transition:opacity .8s,visibility .8s}#splash-text{font-size:1.5rem;font-weight:900;letter-spacing:4px;opacity:0;animation:f 2.2s forwards}@keyframes f{0%{opacity:0;transform:translateY(10px)}30%,70%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}.hide-splash{opacity:0;visibility:hidden;pointer-events:none}
+/* Header */
+.app-header{flex-shrink:0;z-index:500;background-color:var(--bg);position:relative;padding-bottom:10px;border-bottom:0.5px solid rgba(255,255,255,0.1)}
+#app-title{padding:25px 25px 5px;font-size:1.3rem;font-weight:900;letter-spacing:1px;color:var(--text-bright)}
+.sub-title{padding:0 25px;font-size:.7rem;opacity:.5;font-weight:700;text-transform:uppercase}
 
-.app-header{flex-shrink:0;z-index:500;background-color:var(--bg);position:relative}
-#app-title{padding:15px 25px 5px;font-size:1.1rem;font-weight:900;letter-spacing:1px}
-
-/* Results Section - Small & Clean */
-.header-results{padding:10px 25px 15px; display: flex; flex-direction: column; gap: 6px;}
-.res-item-box{border-bottom: 0.5px solid rgba(255,255,255,0.1); padding-bottom: 4px;}
-[data-theme="light"] .res-item-box{border-bottom: 0.5px solid rgba(0,0,0,0.05);}
-
+/* Results Section */
+.header-results{padding:15px 25px 5px; display: flex; flex-direction: column; gap: 8px;}
+.res-item-box{padding-bottom: 4px;}
 .res-label, .total-label{font-size:.7rem;font-weight:700;opacity:.5;display:block;margin-bottom: 1px;}
-.res-val, .total-val{font-size:1.5rem;font-weight:900;line-height:1.2;transition:opacity .4s;letter-spacing:-0.2px;display: block;}
-
+.res-val, .total-val{font-size:1.6rem;font-weight:900;line-height:1.2;transition:opacity .4s;letter-spacing:-0.2px;display: block;}
+#total-res{color: var(--market-color)}
 #gsm-sign{font-size:.8rem;font-weight:700;margin-left:8px;opacity:.7;color:var(--market-color)}
 
-.main-content{padding:0 25px;flex:1;overflow-y:auto;padding-bottom:100px}
+/* Main Content */
+.main-content{padding:20px 25px;flex:1;overflow-y:auto;padding-bottom:100px}
 .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}
-.calc-b,.calc-trigger,.label-group,.reset-btn,.row[onclick],.theme-btn{cursor:pointer;transition:transform .1s}.calc-b:active,.calc-trigger:active,.label-group:active,.reset-btn:active,.row[onclick]:active,.theme-btn:active{transform:scale(.92);opacity:.6}
+
+/* Effect for Clickable Elements */
+.ctrl-btn, .mode-item, .row[onclick], .label-group {
+    transition: transform 0.1s ease;
+    cursor: pointer;
+}
+.ctrl-btn:active, .mode-item:active, .row[onclick]:active, .label-group:active {
+    transform: scale(0.92);
+    opacity: 0.7;
+}
+
+/* Reset Button - Fixed Effect */
+.reset-container { text-align:center; padding:40px; }
+.reset-btn {
+    background: transparent;
+    border: none;
+    color: var(--warn);
+    font-weight: 900;
+    font-size: 1rem;
+    padding: 15px 30px;
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy effect */
+    outline: none;
+}
+.reset-btn:active {
+    transform: scale(0.8) !important; /* သိသိသာသာ ချိုင့်ဝင်သွားစေရန် */
+    opacity: 0.5;
+}
+
 .label-mm{font-size:1.05rem;font-weight:900;display:block;margin-bottom:2px}.label-en{font-size:.75rem;text-transform:uppercase;font-weight:700;opacity:.6;letter-spacing:0.5px}
 .input-group{width:55%;display:flex;align-items:baseline;justify-content:flex-end;position:relative}
+
 input{background:0 0;border:none;color:var(--text-bright);font-size:1.8rem;font-weight:900;text-align:right;outline:0;width:65%;padding:0;font-family:'Inter',sans-serif}
 input:disabled{opacity:0.2}.unit-tag{font-size:.75rem;font-weight:900;color:var(--unit-color);margin-left:8px;display:none;line-height:1.2;text-align:left;min-width:65px}.show-unit{display:inline-block}
 
-.theme-btn{position:fixed;top:48px;right:25px;background:0 0;border:none;color:var(--text-bright);font-size:.75rem;font-weight:900;z-index:10000}
-.calc-trigger{position:fixed;top:73px;right:25px;background:0 0;border:none;color:var(--text-bright);font-size:.75rem;font-weight:900;z-index:10000;opacity:.6}
+.top-controls{position:absolute;top:25px;right:25px;display:flex;flex-direction:column;gap:12px;align-items:flex-end;z-index:1000}
+.ctrl-btn{background:0 0;border:none;color:var(--text-bright);font-size:.75rem;font-weight:900;padding:0;letter-spacing:1px;opacity:0.8}
 
-#calc-overlay{position:fixed;top:75px;left:0;width:100%;height:calc(100% - 75px);background:var(--bg);z-index:9000;display:none;flex-direction:column;padding:20px}
-.calc-screen{flex:1;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:20px 10px}#calc-history{font-size:1.2rem;opacity:.5;margin-bottom:10px;font-weight:700}#cs{font-size:4.5rem;font-weight:900;letter-spacing:-2px}
-.calc-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.calc-b{background:0 0;border:none;color:var(--text-bright);height:75px;font-size:2rem;display:flex;align-items:center;justify-content:center;font-weight:900}.calc-op{color:#ff9f0a;font-weight:900;font-size:2.4rem}.calc-func{color:#a5a5a5;font-size:1.5rem;font-weight:900}
+/* Full Screen Panel */
+.full-panel{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--panel-bg);z-index:2000;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)}
+.full-panel.open{transform:translateY(0)}
+.panel-header{padding:25px;display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid rgba(255,255,255,0.1)}
+.panel-title{font-weight:900;font-size:1.2rem;letter-spacing:1px}
+.close-btn{font-weight:900;font-size:.8rem;color:var(--warn);padding:10px;cursor:pointer}
+.panel-body{padding:25px;flex:1;overflow-y:auto}
 
-.ads-area{width:100%;background:#111;height:35px;display:flex;align-items:center;overflow:hidden;border-bottom:.5px solid #333;z-index:10001}
-.led-marquee{white-space:nowrap;font-size:.9rem;font-weight:900;color:#00ff88;text-shadow:0 0 8px rgba(0,255,136,.6);animation:led-run 20s linear infinite}@keyframes led-run{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-.market-i{position:absolute;right:-15px;top:-10px;font-style:normal;font-size:.7rem;border:1px solid var(--unit-color);border-radius:50%;padding:0 5px;opacity:0}.show-i{opacity:.7}.market-active{color:var(--market-color)!important}.fade-out{opacity:0!important}
+.mode-item{border:1.5px solid rgba(255,255,255,0.1); padding:20px; border-radius:16px; margin-bottom:15px; cursor:pointer;}
+.mode-item.active{border-color: var(--market-color); background: rgba(0,255,136,0.05);}
 </style>
 
 </head>
 <body>
 
-<div class="ads-area">
-  <div class="led-marquee">✨ 𝑾𝒆𝒍𝒄𝒐𝒎𝒆 𝒕𝒐 𝑻𝒆𝒙𝒕𝒊𝒍𝒆 𝑪𝒂𝒍𝒄 ✨ ❚❚❚ [ အထည်လောကရဲ့ စမတ်အကျဆုံး တွက်ချက်မှုလက်တွဲဖော် ] ❚❚❚ 
-  🚀 𝒀𝒐𝒖𝒓 𝑩𝒖𝒔𝒊𝒏𝒆𝒔𝒔, 𝑶𝒖𝒓 𝑷𝒍𝒂𝒕𝒇𝒐𝒓𝒎 - သင့်လုပ်ငန်းကို အရှိန်အဟုန်နဲ့ လူသိများလာစေဖို့ ဒီနေရာမှာ ကြော်ငြာလိုက်ပါ ❯❯❯ 
-  📢 𝑨𝒅𝒔 𝑺𝒑𝒂𝒄𝒆 𝑨𝒗𝒂𝒊𝒍𝒂𝒃𝒍𝒆 ! လူကြီးမင်းတို့ရဲ့ လုပ်ငန်းကြော်ငြာများ ထည့်သွင်းလိုပါက ⫸ 📞 ၀၉-၄၂၀၀၂၁၆၇၈ ကို အခုပဲ ဆက်သွယ်လိုက်ပါ ● 
-  🌟 အောင်မြင်တဲ့ လုပ်ငန်းရှင်တိုင်းရဲ့ ရွေးချယ်မှု - 𝑻𝒆𝒙𝒕𝒊𝒍𝒆 𝑪𝒂𝒍𝒄 🌟</div>
+<div class="top-controls">
+  <button class="ctrl-btn" onclick="toggleTheme()">THEME</button>
+  <button class="ctrl-btn" onclick="toggleMode()">MODE</button>
 </div>
 
-<div id="splash-screen"><div id="splash-text">TEXTILE CALC</div></div>
-<button class="theme-btn" onclick="toggleTheme()">THEME</button>
-<button class="calc-trigger" id="calc-master-btn" onclick="toggleCalc()">CALCULATOR</button>
+<div id="mode-panel" class="full-panel">
+  <div class="panel-header">
+    <div class="panel-title">MODES</div>
+    <div class="close-btn" onclick="toggleMode()">ပိတ်မည်</div>
+  </div>
+  <div class="panel-body">
+    <div style="opacity:0.5; font-weight:700; text-transform:uppercase; font-size:0.7rem; margin-bottom:20px">တွက်ချက်လိုသည့် ပုံစံကို ရွေးချယ်ပါ</div>
+    
+    <div class="mode-item active" id="m-std" onclick="switchMode('std')">
+        <div style="font-weight:900">အထည်တွက်ချက်ခြင်း</div>
+        <div style="font-size:0.8rem; opacity:0.6; margin-top:5px">၁ ကီလိုထွက်ကိုက် (Yield) နှင့် GSM တွက်ရန်</div>
+    </div>
+
+    <div class="mode-item" id="m-req" onclick="switchMode('req')">
+        <div style="font-weight:900">အော်ဒါတွက်ချက်ခြင်း</div>
+        <div style="font-size:0.8rem; opacity:0.6; margin-top:5px">အထည်အရေအတွက်အလိုက် ကုန်ကျစရိတ်တွက်ရန်</div>
+    </div>
+  </div>
+</div>
 
 <div class="app-header">
   <div id="app-title">TEXTILE CALC</div>
+  <div class="sub-title" id="sub-title">အထည်တွက်ချက်ခြင်း (Fabric Calculator)</div>
+  
   <div class="header-results">
     <div class="res-item-box">
-      <span class="total-label">GRAND TOTAL (စုစုပေါင်းကျသင့်ငွေ)</span>
+      <span class="total-label" id="res-total-label">စုစုပေါင်းကျသင့်ငွေ (GRAND TOTAL)</span>
       <span class="total-val" id="total-res">0</span>
     </div>
     <div class="res-item-box">
-      <span class="res-label">၁ ကီလို ထွက်ကိုက် (YIELD)</span>
+      <span class="res-label" id="res-yield-label">၁ ကီလို ထွက်ကိုက် (YIELD)</span>
       <span class="res-val" id="yield-res">0.00</span>
     </div>
-    <div class="res-item-box" style="border-bottom:none">
-      <span class="res-label">GSM (အထည်သားထု)</span>
+    <div class="res-item-box" id="gsm-box">
+      <span class="res-label">အထည်သားထု (GSM)</span>
       <span class="res-val"><span id="gsm-res">0</span><span id="gsm-sign"></span></span>
     </div>
   </div>
 </div>
 
-<div class="main-content">
-  <div class="row">
-    <div class="label-group"><span class="label-mm">အလိပ် ကီလို</span><span class="label-en">Roll Weight</span></div>
-    <div class="input-group"><input type="number" id="kg" placeholder="0"><span class="unit-tag" id="unit-kg">KG<br>ကီလို</span></div>
-  </div>
-  <div class="row" onclick="toggleUnit()">
-    <div class="label-group"><span class="label-mm" id="u-mm">အလိပ် ကိုက်</span><span class="label-en" id="u-en">Roll Yards</span></div>
-    <div class="input-group">
-      <i class="market-i" id="market-i" onmousedown="holdMarket(true)" onmouseup="holdMarket(false)" ontouchstart="holdMarket(true)" ontouchend="holdMarket(false)" onclick="event.stopPropagation()">i</i>
-      <input type="number" id="u-val" placeholder="0" onclick="event.stopPropagation()">
-      <span class="unit-tag" id="unit-u">YD<br>ကိုက်</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="label-group"><span class="label-mm">အလိပ် အနံ</span><span class="label-en">Fabric Width</span></div>
-    <div class="input-group"><input type="number" id="width" placeholder="0" disabled><span class="unit-tag" id="unit-width">INCH<br>လက်မ</span></div>
-  </div>
-  <div class="row">
-    <div class="label-group" style="display: flex; align-items: center;">
-      <input type="number" id="yd_v" value="1" style="width:40px;font-size:1.3rem;text-align:left;font-weight:900;color:var(--text-bright);margin-right:5px">
-      <div>
-        <span class="label-mm">ကိုက်ကီလို</span>
-        <span class="label-en">Yards per KG</span>
-      </div>
-    </div>
-    <div class="input-group"><input type="number" id="yd_k" placeholder="0.00"><span class="unit-tag" id="unit-ratio">KG<br>ကီလို</span></div>
-  </div>
-  <div class="row">
-    <div class="label-group"><span class="label-mm">၁ ကိုက် ဈေးနှုန်း</span><span class="label-en">Price Per Yard</span></div>
-    <div class="input-group"><input type="number" id="p_y" placeholder="0"><span class="unit-tag" id="unit-py">Ks<br>ကျပ်</span></div>
-  </div>
-  <div class="row">
-    <div class="label-group"><span class="label-mm">၁ ကီလို ဈေးနှုန်း</span><span class="label-en">Price Per KG</span></div>
-    <div class="input-group"><input type="number" id="p_k" placeholder="0"><span class="unit-tag" id="unit-pk">Ks<br>ကျပ်</span></div>
-  </div>
-  <div style="text-align:center;padding:40px">
-    <button class="reset-btn" style="background:0 0;border:none;color:var(--warn);font-weight:900;font-size:1rem" onclick="resetAll()">အားလုံးဖျက်မည် (RESET ALL)</button>
-  </div>
-</div>
-
-<div id="calc-overlay">
-  <div class="calc-screen"><div id="calc-history"></div><div id="cs">0</div></div>
-  <div class="calc-btns">
-    <button class="calc-b calc-func" onclick="cl()">AC</button><button class="calc-b calc-func" onclick="del()">⌫</button><button class="calc-b calc-func" onclick="op('%')">%</button><button class="calc-b calc-op" onclick="op('/')">÷</button>
-    <button class="calc-b" onclick="nm('7')">7</button><button class="calc-b" onclick="nm('8')">8</button><button class="calc-b" onclick="nm('9')">9</button><button class="calc-b calc-op" onclick="op('*')">×</button>
-    <button class="calc-b" onclick="nm('4')">4</button><button class="calc-b" onclick="nm('5')">5</button><button class="calc-b" onclick="nm('6')">6</button><button class="calc-b calc-op" onclick="op('-')">−</button>
-    <button class="calc-b" onclick="nm('1')">1</button><button class="calc-b" onclick="nm('2')">2</button><button class="calc-b" onclick="nm('3')">3</button><button class="calc-b calc-op" onclick="op('+')">+</button>
-    <button class="calc-b" onclick="nm('0')">0</button><button class="calc-b" onclick="nm('00')">00</button><button class="calc-b" onclick="nm('.')">.</button><button class="calc-b calc-op" onclick="eq()">=</button>
-  </div>
-</div>
+<div class="main-content" id="main-content"></div>
 
 <script>
-// Logic အပိုင်းတွေက အရင်အတိုင်းပါပဲ (ဘာမှမပြောင်းလဲပါ)
-setTimeout(()=>document.getElementById('splash-screen').classList.add('hide-splash'),2200);
-let q=!1;
-function toggleCalc(){const e=document.getElementById('calc-overlay'),t=document.getElementById('calc-master-btn');q=!q;e.style.display=q?'flex':'none';t.innerText=q?"BACK":"CALCULATOR";t.style.color=q?"var(--warn)":"var(--text-bright)";t.style.opacity=q?"1":"0.6"}
+let currentMode = 'std';
+let isYd = true, f = 0, lastTouched = '';
+
 function toggleTheme(){const e=document.documentElement,t=e.getAttribute('data-theme')==='light'?'dark':'light';e.setAttribute('data-theme',t);localStorage.setItem('textile-theme',t)}
-let u=!0,f=0,l='',t=0;
-function holdMarket(e){const n=document.getElementById('u-val');if(e){t=parseFloat(n.value)||0;n.value=((u?t/1.0936:t)*1.1).toFixed(2);n.classList.add('market-active')}else{n.value=t?t.toFixed(2):'';n.classList.remove('market-active')}}
-function toggleUnit(){clearSecondary();const e=document.getElementById('u-mm'),n=document.getElementById('u-en'),o=document.getElementById('u-val'),i=document.getElementById('unit-u');let s=parseFloat(o.value)||0;if(u){e.innerText="အလိပ် မီတာ";n.innerText="Roll Meters";i.innerHTML="M<br>မီတာ";if(s>0)o.value=(s*.9144).toFixed(2)}else{e.innerText="အလိပ် ကိုက်";n.innerText="Roll Yards";i.innerHTML="YD<br>ကိုက်";if(s>0)o.value=(s/.9144).toFixed(2)}u=!u;runCalc('u-val')}
+function toggleMode(){document.getElementById('mode-panel').classList.toggle('open')}
+
+window.onload = () => switchMode('std');
+
+function switchMode(mode) {
+    currentMode = mode;
+    const content = document.getElementById('main-content');
+    const sub = document.getElementById('sub-title');
+    const gsmBox = document.getElementById('gsm-box');
+    const yLabel = document.getElementById('res-yield-label');
+    const tLabel = document.getElementById('res-total-label');
+    
+    document.querySelectorAll('.mode-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('m-' + mode).classList.add('active');
+
+    if(mode === 'std') {
+        sub.innerText = "အထည်တွက်ချက်ခြင်း (Fabric Calculator)";
+        yLabel.innerText = "၁ ကီလို ထွက်ကိုက် (YIELD)";
+        tLabel.innerText = "စုစုပေါင်းကျသင့်ငွေ (GRAND TOTAL)";
+        gsmBox.style.display = "block";
+        content.innerHTML = renderStandardUI();
+        attachListeners();
+    } else {
+        sub.innerText = "အော်ဒါတွက်ချက်ခြင်း (Requirement Mode)";
+        yLabel.innerText = "စုစုပေါင်းလိုအပ်ချက် (TOTAL NEED)";
+        tLabel.innerText = "စုစုပေါင်းကုန်ကျစရိတ် (TOTAL COST)";
+        gsmBox.style.display = "none";
+        content.innerHTML = renderRequirementUI();
+        attachReqListeners();
+    }
+    resetResults();
+    if(document.getElementById('mode-panel').classList.contains('open')) toggleMode();
+}
+
+function renderStandardUI() {
+    return `
+      <div class="row">
+        <div class="label-group"><span class="label-mm">အလိပ် ကီလို</span><span class="label-en">Roll Weight</span></div>
+        <div class="input-group"><input type="number" id="kg" placeholder="0"><span class="unit-tag" id="unit-kg">KG<br>ကီလို</span></div>
+      </div>
+      <div class="row" onclick="toggleUnit()">
+        <div class="label-group"><span class="label-mm" id="u-mm">အလိပ် ကိုက်</span><span class="label-en" id="u-en">Roll Yards</span></div>
+        <div class="input-group">
+          <input type="number" id="u-val" placeholder="0" onclick="event.stopPropagation()">
+          <span class="unit-tag" id="unit-u">YD<br>ကိုက်</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="label-group"><span class="label-mm">အလိပ် အနံ</span><span class="label-en">Fabric Width</span></div>
+        <div class="input-group"><input type="number" id="width" placeholder="0" disabled><span class="unit-tag" id="unit-width">INCH<br>လက်မ</span></div>
+      </div>
+      <div class="row">
+        <div class="label-group" style="display: flex; align-items: center;">
+          <input type="number" id="yd_v" value="1" style="width:40px;font-size:1.3rem;text-align:left;font-weight:900;color:var(--text-bright);margin-right:5px">
+          <div><span class="label-mm">ကိုက်ကီလို</span><span class="label-en">Yards per KG</span></div>
+        </div>
+        <div class="input-group"><input type="number" id="yd_k" placeholder="0.00"><span class="unit-tag" id="unit-ratio">KG<br>ကီလို</span></div>
+      </div>
+      <div class="row">
+        <div class="label-group"><span class="label-mm">၁ ကိုက် ဈေးနှုန်း</span><span class="label-en">Price Per Yard</span></div>
+        <div class="input-group"><input type="number" id="p_y" placeholder="0"><span class="unit-tag" id="unit-py">Ks<br>ကျပ်</span></div>
+      </div>
+      <div class="row">
+        <div class="label-group"><span class="label-mm">၁ ကီလို ဈေးနှုန်း</span><span class="label-en">Price Per KG</span></div>
+        <div class="input-group"><input type="number" id="p_k" placeholder="0"><span class="unit-tag" id="unit-pk">Ks<br>ကျပ်</span></div>
+      </div>
+      <div class="reset-container"><button class="reset-btn" onclick="switchMode('std')">အားလုံးဖျက်မည် (RESET ALL)</button></div>
+    `;
+}
+
+function renderRequirementUI() {
+    return `
+      <div class="row">
+        <div class="label-group"><span class="label-mm">ချုပ်မည့်အရေအတွက်</span><span class="label-en">Order Quantity</span></div>
+        <div class="input-group"><input type="number" id="pcs" placeholder="0"><span class="unit-tag show-unit">PCS<br>ထည်/ခု</span></div>
+      </div>
+      <div class="row">
+        <div class="label-group"><span class="label-mm">တစ်ထည်စာကုန်နှုန်း</span><span class="label-en">Consumption</span></div>
+        <div class="input-group"><input type="number" id="con" placeholder="0.00"><span class="unit-tag show-unit">UNIT<br>ကီလို/ကိုက်</span></div>
+      </div>
+      <div class="row">
+        <div class="label-group"><span class="label-mm">အလေအလွင့် (%)</span><span class="label-en">Wastage %</span></div>
+        <div class="input-group"><input type="number" id="waste" value="5"><span class="unit-tag show-unit">%<br>ရာခိုင်နှုန်း</span></div>
+      </div>
+      <div class="row">
+        <div class="label-group"><span class="label-mm">၁ ယူနစ် ဈေးနှုန်း</span><span class="label-en">Unit Price</span></div>
+        <div class="input-group"><input type="number" id="u_p" placeholder="0"><span class="unit-tag show-unit">Ks<br>ကျပ်</span></div>
+      </div>
+      <div class="reset-container"><button class="reset-btn" onclick="switchMode('req')">အားလုံးဖျက်မည် (RESET ALL)</button></div>
+    `;
+}
+
+function attachReqListeners() {
+    const inps = document.querySelectorAll('#main-content input');
+    inps.forEach(i => i.addEventListener('input', () => {
+        let p = parseFloat(document.getElementById('pcs').value) || 0;
+        let c = parseFloat(document.getElementById('con').value) || 0;
+        let w = parseFloat(document.getElementById('waste').value) || 0;
+        let up = parseFloat(document.getElementById('u_p').value) || 0;
+        let net = p * c;
+        let total = net + (net * (w/100));
+        let cost = total * up;
+        document.getElementById('yield-res').innerText = total.toFixed(2);
+        document.getElementById('total-res').innerText = Math.round(cost).toLocaleString();
+    }));
+}
+
+function attachListeners() {
+    const inputs = document.querySelectorAll('#main-content input');
+    inputs.forEach(e => e.addEventListener('input', t => {
+        const n = document.getElementById('kg'), o = document.getElementById('u-val');
+        if(t.target.id === 'yd_k' && n.value === '' && o.value === '') { lastTouched = 'yd_k'; n.readOnly = !0; o.readOnly = !0; }
+        if(t.target.id === 'yd_v') { updateRatioOnly(); return; }
+        if(['kg','u-val'].includes(t.target.id)) clearSecondary();
+        if(lastTouched === '' && t.target.id !== 'yd_v') lastTouched = t.target.id;
+        const i = t.target.parentElement.querySelector('.unit-tag');
+        if(i) t.target.value.length > 0 ? i.classList.add('show-unit') : i.classList.remove('show-unit');
+        runCalc(t.target.id);
+    }));
+}
+
+function toggleUnit(){
+    clearSecondary();
+    const e=document.getElementById('u-mm'),n=document.getElementById('u-en'),o=document.getElementById('u-val'),i=document.getElementById('unit-u');
+    let s=parseFloat(o.value)||0;
+    if(isYd){e.innerText="အလိပ် မီတာ";n.innerText="Roll Meters";i.innerHTML="M<br>မီတာ";if(s>0)o.value=(s*.9144).toFixed(2)}
+    else{e.innerText="အလိပ် ကိုက်";n.innerText="Roll Yards";i.innerHTML="YD<br>ကိုက်";if(s>0)o.value=(s/.9144).toFixed(2)}
+    isYd=!isYd; runCalc('u-val');
+}
 
 function clearSecondary(){
-  ['p_y','p_k'].forEach(e=>document.getElementById(e).value='');
-  document.querySelectorAll('.unit-tag').forEach(e=>{
-    if(['unit-py','unit-pk'].includes(e.id))e.classList.remove('show-unit')
-  })
+    ['p_y','p_k'].forEach(e=>{ if(document.getElementById(e)) document.getElementById(e).value='' });
+    document.querySelectorAll('.unit-tag').forEach(e=>{ if(['unit-py','unit-pk'].includes(e.id))e.classList.remove('show-unit') });
 }
 
-const inputs=document.querySelectorAll('.main-content input');
-inputs.forEach(e=>e.addEventListener('input',t=>{
-  const n=document.getElementById('kg'),o=document.getElementById('u-val');
-  if(t.target.id==='yd_k'&&n.value===''&&o.value===''){
-    l='yd_k';
-    n.readOnly=!0;
-    o.readOnly=!0;
-  }
-  if(t.target.id==='yd_v'){updateRatioOnly();return}
-  if(['kg','u-val'].includes(t.target.id))clearSecondary();
-  if(l===''&&t.target.id!=='yd_v')l=t.target.id;
-  const i=t.target.parentElement.querySelector('.unit-tag');
-  if(i)t.target.value.length>0?i.classList.add('show-unit'):i.classList.remove('show-unit');
-  runCalc(t.target.id)
-}));
-
-function updateRatioOnly(){let e=parseFloat(document.getElementById('yd_v').value)||0;if(f>0&&e>0){document.getElementById('yd_k').value=(e/f).toFixed(2);document.getElementById('unit-ratio').classList.add('show-unit')}}
+function updateRatioOnly(){
+    let e=parseFloat(document.getElementById('yd_v').value)||0;
+    if(f>0 && e>0){ document.getElementById('yd_k').value=(e/f).toFixed(2); document.getElementById('unit-ratio').classList.add('show-unit'); }
+}
 
 function runCalc(e){
-  let n=document.getElementById('kg'),o=document.getElementById('u-val'),i=document.getElementById('yd_k'),s=document.getElementById('yd_v'),a=parseFloat(n.value)||0,r=parseFloat(document.getElementById('width').value)||0,c=parseFloat(o.value)||0,d=parseFloat(s.value)||1,g=parseFloat(i.value)||0,m=parseFloat(document.getElementById('p_y').value)||0,p=parseFloat(document.getElementById('p_k').value)||0;
-  const h=document.getElementById('market-i');
-  if(u&&c>0)h.classList.add('show-i');else h.classList.remove('show-i');
-  let y=u?c:c/.9144;
-  
-  if(e==='yd_k'&&g>0){
-    f=d/g;
-    if(l==='u-val'&&y>0){a=y/f;n.value=a.toFixed(2);document.getElementById('unit-kg').classList.add('show-unit')}
-    else if(l==='kg'&&a>0){let e=f*a;o.value=u?e.toFixed(2):(e*.9144).toFixed(2);document.getElementById('unit-u').classList.add('show-unit')}
-  }else if(a>0&&y>0){f=y/a;i.value=(d/f).toFixed(2);document.getElementById('unit-ratio').classList.add('show-unit')}
-  
-  const widthInput = document.getElementById('width');
-  if((a > 0 && y > 0) || g > 0) { widthInput.disabled = false; } 
-  else { widthInput.disabled = true; widthInput.value = ''; }
-
-  if(f>0){
-    if(e==='p_y'){p=m*f;document.getElementById('p_k').value=Math.round(p);document.getElementById('unit-pk').classList.add('show-unit')}
-    else if(e==='p_k'){m=p/f;document.getElementById('p_y').value=Math.round(m);document.getElementById('unit-py').classList.add('show-unit')}
-  }
-  let v=f>0&&r>0?1000*1.0936/(f*r*.0254):0;
-  document.getElementById('yield-res').innerText=f>0?f.toFixed(2):"0.00";
-  document.getElementById('total-res').innerText=a>0&&p>0?Math.round(a*p).toLocaleString():"0";
-  document.getElementById('gsm-res').innerText=v>0?Math.round(v):"0";
-  const x=document.getElementById('gsm-sign');
-  if(v>0){
-    let e=Math.round(v);
-    x.innerText=e<110?"- အလွန်ပါး":e<160?"- ပါး":e<220?"- အလတ်":e<300?"- ထူ":"- အလွန်ထူ"
-  }else x.innerText=""
+    let n=document.getElementById('kg'), o=document.getElementById('u-val'), i=document.getElementById('yd_k'), s=document.getElementById('yd_v'), 
+    a=parseFloat(n.value)||0, r=parseFloat(document.getElementById('width').value)||0, c=parseFloat(o.value)||0, d=parseFloat(s.value)||1, 
+    g=parseFloat(i.value)||0, m=parseFloat(document.getElementById('p_y').value)||0, p=parseFloat(document.getElementById('p_k').value)||0;
+    
+    let y = isYd ? c : c/.9144;
+    if(e==='yd_k' && g>0){
+        f=d/g;
+        if(lastTouched==='u-val' && y>0){ a=y/f; n.value=a.toFixed(2); document.getElementById('unit-kg').classList.add('show-unit'); }
+        else if(lastTouched==='kg' && a>0){ let val=f*a; o.value=isYd?val.toFixed(2):(val*.9144).toFixed(2); document.getElementById('unit-u').classList.add('show-unit'); }
+    } else if(a>0 && y>0){
+        f=y/a; i.value=(d/f).toFixed(2); document.getElementById('unit-ratio').classList.add('show-unit');
+    }
+    const wInp = document.getElementById('width');
+    if((a > 0 && y > 0) || g > 0) { wInp.disabled = false; } else { wInp.disabled = true; wInp.value = ''; }
+    if(f>0){
+        if(e==='p_y'){ p=m*f; document.getElementById('p_k').value=Math.round(p); document.getElementById('unit-pk').classList.add('show-unit'); }
+        else if(e==='p_k'){ m=p/f; document.getElementById('p_y').value=Math.round(m); document.getElementById('unit-py').classList.add('show-unit'); }
+    }
+    let v=f>0 && r>0 ? 1000*1.0936/(f*r*.0254) : 0;
+    document.getElementById('yield-res').innerText=f>0?f.toFixed(2):"0.00";
+    document.getElementById('total-res').innerText=a>0 && p>0?Math.round(a*p).toLocaleString():"0";
+    document.getElementById('gsm-res').innerText=v>0?Math.round(v):"0";
+    const x=document.getElementById('gsm-sign');
+    if(v>0){
+        let gv=Math.round(v);
+        x.innerText=gv<110?"- အလွန်ပါး":gv<160?"- ပါး":gv<220?"- အလတ်":gv<300?"- ထူ":"- အလွန်ထူ";
+    }else x.innerText="";
 }
 
-function resetAll(){
-  const e=[document.getElementById('yield-res'),document.getElementById('gsm-res'),document.getElementById('total-res'),document.getElementById('gsm-sign')];
-  inputs.forEach(e=>{if(e.value&&e.id!=='yd_v')e.classList.add('fade-out')});
-  e.forEach(e=>e.classList.add('fade-out'));
-  setTimeout(()=>{
-    inputs.forEach(e=>{e.id==='yd_v'?e.value=1:e.value='';e.readOnly=!1;e.classList.remove('fade-out')});
-    document.querySelectorAll('.unit-tag').forEach(e=>e.classList.remove('show-unit'));
-    document.getElementById('market-i').classList.remove('show-i');
-    l='';f=0;
-    document.getElementById('yield-res').innerText="0.00";
-    document.getElementById('gsm-res').innerText="0";
-    document.getElementById('gsm-sign').innerText="";
-    document.getElementById('total-res').innerText="0";
-    e.forEach(e=>e.classList.remove('fade-out'))
-  },400)
+function resetResults() {
+    document.getElementById('yield-res').innerText = "0.00";
+    document.getElementById('total-res').innerText = "0";
+    if(document.getElementById('gsm-res')) document.getElementById('gsm-res').innerText = "0";
+    if(document.getElementById('gsm-sign')) document.getElementById('gsm-sign').innerText = "";
+    f=0; lastTouched='';
 }
-
-const scr=document.getElementById('cs'),hist=document.getElementById('calc-history');
-let cV='0',pV='',cO=null,wN=!1;
-function nm(e){if(wN){cV=e;wN=!1}else cV=cV==='0'?e:cV+e;scr.innerText=cV.substring(0,12)}
-function del(){cV=cV.length>1?cV.slice(0,-1):'0';scr.innerText=cV}
-function cl(){cV='0';pV='';cO=null;scr.innerText='0';hist.innerText=''}
-function op(e){const t=parseFloat(cV);if(cO&&wN){cO=e;hist.innerText=pV+" "+cO;return}if(pV==='')pV=t;else if(cO){const e=pf(pV,t,cO);cV=String(e);pV=e}wN=!0;cO=e;scr.innerText=cV;hist.innerText=pV+" "+cO}
-function eq(){if(!cO)return;let e=pf(pV,parseFloat(cV),cO);hist.innerText=pV+" "+cO+" "+cV+" =";cV=String(e);pV='';cO=null;wN=!0;scr.innerText=cV.substring(0,12)}
-function pf(e,t,n){return n==='+'?e+t:n==='-'?e-t:n==='*'?e*t:n==='/'?e/t:n==='%'?e*t/100:t}
 </script>
 </body></html>
